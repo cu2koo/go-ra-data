@@ -1,0 +1,11 @@
+# certificates
+config
+
+# config files
+config.json
+
+# ide
+.idea
+
+# os
+.DS_Store

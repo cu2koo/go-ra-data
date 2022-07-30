@@ -1,0 +1,1038 @@
+basePath: /
+consumes:
+- application/json
+host: localhost
+info:
+  description: |-
+    This interface combines interfaces to user databases and market data providers.
+
+    This is intended for an implementation of a robo advisor and implements various data processes for
+    data collection, data preparation, data storage and data security.
+
+    To use it, the user must identify himself via BasicAuth.
+  title: Robo-Advisor Data API
+  version: 1.0.0
+paths:
+  /market/prices/:
+    get:
+      operationId: getPrices
+      parameters:
+      - in: query
+        name: symbol
+        required: true
+        type: string
+      - in: query
+        name: period
+        type: string
+      responses:
+        "200":
+          $ref: '#/responses/priceDataResponses'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - Market
+  /user/:
+    get:
+      operationId: getUsers
+      responses:
+        "200":
+          $ref: '#/responses/userResponses'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    post:
+      operationId: createUser
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            mail:
+              example: max.mustermann@domain.com
+              type: string
+              x-go-name: Mail
+            password:
+              example: encrypted_secret_password
+              type: string
+              x-go-name: Password
+            userId:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: UserId
+          type: object
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}:
+    delete:
+      operationId: deleteUser
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    get:
+      operationId: getUser
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/userResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updateUser
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            mail:
+              example: max.mustermann@domain.com
+              type: string
+              x-go-name: Mail
+            password:
+              example: encrypted_secret_password
+              type: string
+              x-go-name: Password
+            userId:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: UserId
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/deposit:
+    get:
+      operationId: getDeposits
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/depositResponses'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    post:
+      operationId: addDeposit
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            amount:
+              example: 2000
+              format: double
+              type: number
+              x-go-name: Amount
+            currency:
+              example: USD
+              type: string
+              x-go-name: Currency
+            date:
+              example: "2022-07-01"
+              type: string
+              x-go-name: Date
+            id:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: Id
+            target:
+              example: liquidity
+              type: string
+              x-go-name: Target
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/deposit/{id}:
+    delete:
+      operationId: deleteDeposit
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      - in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updateDeposit
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            amount:
+              example: 2000
+              format: double
+              type: number
+              x-go-name: Amount
+            currency:
+              example: USD
+              type: string
+              x-go-name: Currency
+            date:
+              example: "2022-07-01"
+              type: string
+              x-go-name: Date
+            id:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: Id
+            target:
+              example: liquidity
+              type: string
+              x-go-name: Target
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      - in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/experience:
+    get:
+      operationId: getExperiences
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/experienceResponses'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    post:
+      operationId: addExperience
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            id:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: Id
+            timePeriod:
+              example: 3y
+              type: string
+              x-go-name: TimePeriod
+            transactions:
+              example: 5
+              format: int64
+              type: integer
+              x-go-name: Transactions
+            type:
+              example: Stocks
+              type: string
+              x-go-name: Type
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/experience/{id}:
+    delete:
+      operationId: deleteExperience
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      - in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updateExperience
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            id:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: Id
+            timePeriod:
+              example: 3y
+              type: string
+              x-go-name: TimePeriod
+            transactions:
+              example: 5
+              format: int64
+              type: integer
+              x-go-name: Transactions
+            type:
+              example: Stocks
+              type: string
+              x-go-name: Type
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      - in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/fi:
+    get:
+      operationId: getFinancialInformation
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/financialInformationResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updateFinancialInformation
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            assets:
+              properties:
+                illiquid:
+                  example: 50000
+                  format: double
+                  type: number
+                  x-go-name: Illiquid
+                liquid:
+                  example: 10000
+                  format: double
+                  type: number
+                  x-go-name: Liquid
+              type: object
+              x-go-name: Assets
+            expenses:
+              example: 2500
+              format: double
+              type: number
+              x-go-name: Expenses
+            income:
+              example: 4000
+              format: double
+              type: number
+              x-go-name: Income
+            liabilities:
+              example: 40000
+              format: double
+              type: number
+              x-go-name: Liabilities
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/goal:
+    get:
+      operationId: getGoal
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/goalResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updateGoal
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            endDate:
+              example: "2032-07-01"
+              type: string
+              x-go-name: EndDate
+            goal:
+              example: build wealth
+              type: string
+              x-go-name: Goal
+            startDate:
+              example: "2022-07-01"
+              type: string
+              x-go-name: StartDate
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/pd:
+    get:
+      operationId: getPeriodicalDeposits
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/periodicalDepositsResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updatePeriodicalDeposits
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            amount:
+              example: 25
+              format: double
+              type: number
+              x-go-name: Amount
+            currency:
+              example: USD
+              type: string
+              x-go-name: Currency
+            period:
+              example: 1m
+              type: string
+              x-go-name: Period
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/ra:
+    get:
+      operationId: getRiskAssessment
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/riskAssessmentResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updateRiskAssessment
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            maxVolatility:
+              example: 10.5
+              format: double
+              type: number
+              x-go-name: MaxVolatility
+            riskAppetite:
+              example: 5
+              format: int64
+              type: integer
+              x-go-name: RiskAppetite
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/security:
+    get:
+      operationId: getSecurity
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/securityResponses'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    post:
+      operationId: addSecurity
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            averageCostPerShare:
+              example: 280
+              format: double
+              type: number
+              x-go-name: AverageCostPerShare
+            id:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: Id
+            shares:
+              example: 4
+              format: double
+              type: number
+              x-go-name: Shares
+            symbol:
+              example: MSFT
+              type: string
+              x-go-name: Symbol
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+  /user/{userId}/security/{id}:
+    delete:
+      operationId: deleteSecurity
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      - in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+    put:
+      operationId: updateSecurity
+      parameters:
+      - in: body
+        name: Body
+        required: true
+        schema:
+          properties:
+            averageCostPerShare:
+              example: 280
+              format: double
+              type: number
+              x-go-name: AverageCostPerShare
+            id:
+              example: 16
+              format: int64
+              type: integer
+              x-go-name: Id
+            shares:
+              example: 4
+              format: double
+              type: number
+              x-go-name: Shares
+            symbol:
+              example: MSFT
+              type: string
+              x-go-name: Symbol
+          type: object
+      - in: path
+        name: userId
+        required: true
+        type: integer
+      - in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          $ref: '#/responses/successResponse'
+        "400":
+          $ref: '#/responses/errorResponse'
+        "501":
+          $ref: '#/responses/errorResponse'
+      tags:
+      - User
+produces:
+- application/json
+responses:
+  depositResponses:
+    description: ""
+    schema:
+      items:
+        properties:
+          amount:
+            example: 2000
+            format: double
+            type: number
+            x-go-name: Amount
+          currency:
+            example: USD
+            type: string
+            x-go-name: Currency
+          date:
+            example: "2022-07-01"
+            type: string
+            x-go-name: Date
+          id:
+            example: 16
+            format: int64
+            type: integer
+            x-go-name: Id
+          target:
+            example: liquidity
+            type: string
+            x-go-name: Target
+        type: object
+      type: array
+  errorResponse:
+    description: ""
+    schema:
+      properties:
+        message:
+          example: something went wrong
+          type: string
+          x-go-name: Message
+      type: object
+  experienceResponses:
+    description: ""
+    schema:
+      items:
+        properties:
+          id:
+            example: 16
+            format: int64
+            type: integer
+            x-go-name: Id
+          timePeriod:
+            example: 3y
+            type: string
+            x-go-name: TimePeriod
+          transactions:
+            example: 5
+            format: int64
+            type: integer
+            x-go-name: Transactions
+          type:
+            example: Stocks
+            type: string
+            x-go-name: Type
+        type: object
+      type: array
+  financialInformationResponse:
+    description: ""
+    schema:
+      properties:
+        assets:
+          properties:
+            illiquid:
+              example: 50000
+              format: double
+              type: number
+              x-go-name: Illiquid
+            liquid:
+              example: 10000
+              format: double
+              type: number
+              x-go-name: Liquid
+          type: object
+          x-go-name: Assets
+        expenses:
+          example: 2500
+          format: double
+          type: number
+          x-go-name: Expenses
+        income:
+          example: 4000
+          format: double
+          type: number
+          x-go-name: Income
+        liabilities:
+          example: 40000
+          format: double
+          type: number
+          x-go-name: Liabilities
+      type: object
+  goalResponse:
+    description: ""
+    schema:
+      properties:
+        endDate:
+          example: "2032-07-01"
+          type: string
+          x-go-name: EndDate
+        goal:
+          example: build wealth
+          type: string
+          x-go-name: Goal
+        startDate:
+          example: "2022-07-01"
+          type: string
+          x-go-name: StartDate
+      type: object
+  periodicalDepositsResponse:
+    description: ""
+    schema:
+      properties:
+        amount:
+          example: 25
+          format: double
+          type: number
+          x-go-name: Amount
+        currency:
+          example: USD
+          type: string
+          x-go-name: Currency
+        period:
+          example: 1m
+          type: string
+          x-go-name: Period
+      type: object
+  priceDataResponses:
+    description: ""
+    schema:
+      items:
+        properties:
+          currency:
+            example: USD
+            type: string
+            x-go-name: Currency
+          priceHigh52Wk:
+            example: 150.01
+            format: double
+            type: number
+            x-go-name: PriceHigh52Wk
+          priceLow52Wk:
+            example: 99.99
+            format: double
+            type: number
+            x-go-name: PriceLow52Wk
+          prices:
+            items:
+              properties:
+                close:
+                  example: 132.75
+                  format: double
+                  type: number
+                  x-go-name: Close
+                date:
+                  example: "2020-01-10"
+                  type: string
+                  x-go-name: Date
+                high:
+                  example: 140.21
+                  format: double
+                  type: number
+                  x-go-name: High
+                low:
+                  example: 110.92
+                  format: double
+                  type: number
+                  x-go-name: Low
+                open:
+                  example: 120.06
+                  format: double
+                  type: number
+                  x-go-name: Open
+                volume:
+                  example: 218000
+                  format: double
+                  type: number
+                  x-go-name: Volume
+              type: object
+            type: array
+            x-go-name: Prices
+          source:
+            example: domain.com
+            type: string
+            x-go-name: Source
+          ticker:
+            example: AAPL
+            type: string
+            x-go-name: Ticker
+        type: object
+      type: array
+  riskAssessmentResponse:
+    description: ""
+    schema:
+      properties:
+        maxVolatility:
+          example: 10.5
+          format: double
+          type: number
+          x-go-name: MaxVolatility
+        riskAppetite:
+          example: 5
+          format: int64
+          type: integer
+          x-go-name: RiskAppetite
+      type: object
+  securityResponses:
+    description: ""
+    schema:
+      items:
+        properties:
+          averageCostPerShare:
+            example: 280
+            format: double
+            type: number
+            x-go-name: AverageCostPerShare
+          id:
+            example: 16
+            format: int64
+            type: integer
+            x-go-name: Id
+          shares:
+            example: 4
+            format: double
+            type: number
+            x-go-name: Shares
+          symbol:
+            example: MSFT
+            type: string
+            x-go-name: Symbol
+        type: object
+      type: array
+  successResponse:
+    description: ""
+    schema:
+      properties:
+        message:
+          example: action successful
+          type: string
+          x-go-name: Message
+      type: object
+  userResponse:
+    description: ""
+    schema:
+      properties:
+        mail:
+          example: max.mustermann@domain.com
+          type: string
+          x-go-name: Mail
+        password:
+          example: encrypted_secret_password
+          type: string
+          x-go-name: Password
+        userId:
+          example: 16
+          format: int64
+          type: integer
+          x-go-name: UserId
+      type: object
+  userResponses:
+    description: ""
+    schema:
+      items:
+        properties:
+          mail:
+            example: max.mustermann@domain.com
+            type: string
+            x-go-name: Mail
+          password:
+            example: encrypted_secret_password
+            type: string
+            x-go-name: Password
+          userId:
+            example: 16
+            format: int64
+            type: integer
+            x-go-name: UserId
+        type: object
+      type: array
+schemes:
+- http
+- https
+security:
+- basicAuth: []
+securityDefinitions:
+  basicAuth:
+    type: basic
+swagger: "2.0"

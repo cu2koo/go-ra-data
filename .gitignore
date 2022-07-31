@@ -1,5 +1,6 @@
 # certificates
-config
+server.crt
+server.key
 
 # config files
 config.json

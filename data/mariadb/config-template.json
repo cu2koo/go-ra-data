@@ -1,0 +1,6 @@
+{
+  "addr": ":3306",
+  "dbName": "user",
+  "user": "root",
+  "passwd": "secret"
+}

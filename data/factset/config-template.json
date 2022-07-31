@@ -1,0 +1,5 @@
+{
+  "baseURL": "https://api.factset.com/formula-api/v1",
+  "username": "user",
+  "apiKey": "secret"
+}

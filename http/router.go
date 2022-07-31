@@ -21,7 +21,7 @@ func SetupRouter(accounts *gin.Accounts, c service.User, ms service.Market) *gin
 	// Routing of the user service.
 	if c != nil {
 		authorized.POST("/user", c.CreateUser)
-		authorized.GET("/user/:user", c.GetUsers)
+		authorized.GET("/user", c.GetUsers)
 		authorized.GET("/user/:userId", c.GetUser)
 		authorized.PUT("/user/:userId", c.UpdateUser)
 		authorized.DELETE("/user/:userId", c.DeleteUser)

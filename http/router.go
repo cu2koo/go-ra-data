@@ -6,46 +6,41 @@ import (
 	"net/http"
 )
 
-// serviceNotImplemented creates responds for requests to non-implemented service endpoints
+// serviceNotImplemented is a predefined error message to indicate that the service has not been implemented.
 func serviceNotImplemented(c *gin.Context) {
 	c.JSON(http.StatusNotImplemented, gin.H{"message": "service not implemented"})
 }
 
-// SetupRouter routes http requests to the correct service endpoint
+// SetupRouter routes http requests to a service endpoint.
 func SetupRouter(accounts *gin.Accounts, c service.User, ms service.Market) *gin.Engine {
 	r := gin.Default()
 
+	// Group for the authorized users is created.
 	authorized := r.Group("", gin.BasicAuth(*accounts))
 
+	// Routing of the user service.
 	if c != nil {
 		authorized.POST("/user", c.CreateUser)
 		authorized.GET("/user/:user", c.GetUsers)
 		authorized.GET("/user/:userId", c.GetUser)
 		authorized.PUT("/user/:userId", c.UpdateUser)
 		authorized.DELETE("/user/:userId", c.DeleteUser)
-
 		authorized.GET("/user/:userId/fi", c.GetFinancialInformation)
 		authorized.PUT("/user/:userId/fi", c.UpdateFinancialInformation)
-
 		authorized.GET("/user/:userId/goal", c.GetGoal)
 		authorized.PUT("/user/:userId/goal", c.UpdateGoal)
-
 		authorized.GET("/user/:userId/pd", c.GetPeriodicalDeposits)
 		authorized.PUT("/user/:userId/pd", c.UpdatePeriodicalDeposits)
-
 		authorized.GET("/user/:userId/ra", c.GetRiskAssessment)
 		authorized.PUT("/user/:userId/ra", c.UpdateRiskAssessment)
-
 		authorized.POST("/user/:userId/experience", c.AddExperience)
 		authorized.GET("/user/:userId/experience", c.GetExperiences)
 		authorized.PUT("/user/:userId/experience/:id", c.UpdateExperience)
 		authorized.DELETE("/user/:userId/experience/:id", c.DeleteExperience)
-
 		authorized.POST("/user/:userId/deposit", c.AddDeposit)
 		authorized.GET("/user/:userId/deposit", c.GetDeposits)
 		authorized.PUT("/user/:userId/deposit/:id", c.UpdateDeposit)
 		authorized.DELETE("/user/:userId/deposit/:id", c.DeleteDeposit)
-
 		authorized.POST("/user/:userId/security", c.AddSecurity)
 		authorized.GET("/user/:userId/security", c.GetSecurities)
 		authorized.PUT("/user/:userId/security/:id", c.UpdateSecurity)
@@ -78,6 +73,7 @@ func SetupRouter(accounts *gin.Accounts, c service.User, ms service.Market) *gin
 		r.DELETE("/user/:userId/security/:id", serviceNotImplemented)
 	}
 
+	// Routing of the market service.
 	if ms != nil {
 		authorized.GET("/market/prices", ms.GetPrices)
 	} else {
